@@ -13,10 +13,11 @@ def index():
 
 @app.route("/admin")
 def admin():
-    # Vulnerable logic: trusting X-Forwarded-For
+    # Get X-Forwarded-For safely (default to empty string)
     forwarded = request.headers.get("X-Forwarded-For", "")
 
-    if forwarded == "127.0.0.1":
+    # Intentionally vulnerable logic
+    if "127.0.0.1" in forwarded:
         return f"<h2>Admin Panel</h2><p>Flag: {FLAG}</p>"
     else:
         abort(403)
